@@ -1,0 +1,47 @@
+<div class="reach">
+  <div class="model" *ngIf="model">
+    <div class="model-content">
+      <div class="model-content-description" *ngIf="modelDescription">
+        <h3>Aviso</h3>
+        <p>{{this.message}}</p>
+        <div class="reach-navigation">
+          <button class="reach-navigation_button reach-navigation_finish" (click)="close()">Cerrar</button>
+        </div>
+      </div>
+      <div class="model-content-loading" *ngIf="modelLoading"></div>
+    </div>
+  </div>
+    <div class="reach-end">
+      <div class="reach-form">
+        <section class="reach-layout reach-layout_left">
+          <div class="reach-result"  *ngIf="user">
+            <div class="container">
+                <h3>Nivel de Madurez Digital</h3>
+                <p class="level">
+                  Bienvenido, <strong>{{ user.name }}</strong><br>
+                  Empresa: <strong>{{user.company}}</strong><br>
+                  Nivel de madurez digital: <strong>{{ user.ranking > 0 && user.ranking <= 2?"Principiante":user.ranking > 2 && user.ranking <= 4?"Intermedio":user.ranking >4 ?"Avanzado":"" }}</strong>.<br> 
+                </p>
+            
+                <p>La madurez digital implica la adopción efectiva de la tecnología para mejorar los procesos y la toma de decisiones.
+                  En un mundo empresarial cada vez más digitalizado, las organizaciones y los profesionales deben adaptarse para
+                  prosperar.</p>
+            
+                <p>La madurez digital no solo se trata de adoptar nuevas tecnologías, sino también de cultivar una mentalidad
+                  innovadora. La disposición para experimentar, aprender y adaptarse continuamente es clave en este proceso.</p>
+            
+                <p>En conclusión, la madurez digital es un camino emocionante y desafiante. Al integrar la tecnología de manera
+                  estratégica, puedes potenciar tu crecimiento profesional y contribuir al éxito de tu industria.</p>
+            
+                <p>¡Que tu viaje hacia la madurez digital sea fructífero y lleno de descubrimientos!</p>
+                <div class="reach-navigation">
+                  <a class="reach-navigation_button reach-navigation_start" href="/assets/reach/madurez.pdf"  download="madurez-digital.pdf">Descargar nuevamente</a>
+                </div>
+            </div>
+          </div>
+        </section>
+        <section class="reach-layout reach-layout_right" style="background-image: url(../assets/reach/q2-bg.jpg)"></section>
+      </div>
+  
+    </div>
+  </div>

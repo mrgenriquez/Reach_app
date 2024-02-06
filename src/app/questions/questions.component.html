@@ -1,0 +1,140 @@
+<div class="reach">
+  
+  <div class="model" *ngIf="model">
+    <div class="model-content">
+      <div class="model-content-description" *ngIf="modelDescription">
+        <h3>Aviso</h3>
+        <p>{{this.message}}</p>
+        <div class="reach-navigation">
+          <button class="reach-navigation_button reach-navigation_finish" (click)="close()">Cerrar</button>
+        </div>
+      </div>
+      <div class="model-content-loading" *ngIf="modelLoading"></div>
+    </div>
+  </div>
+  <div class="reach-start" *ngIf="this.currentQuestionIndex == 0">
+    <div class="reach-start_desctiption">
+      <p>¡Acelera tu camino hacia la madurez digital en solo 3 minutos!</p>
+      <p>Completa las preguntas de Madurez Digital y obtén una guía personalizada al instante para mejorar tus habilidades digitales. </p>
+      <div class="reach-navigation">
+        <button class="reach-navigation_button reach-navigation_start" (click)="nextQuestion()">Iniciar ahora</button>
+      </div>
+    </div>
+  </div>
+  <div class="reach-end" *ngIf="this.currentQuestionIndex == 5">
+    <div class="reach-form">
+      <section class="reach-layout reach-layout_left">
+        <div  class="reach-form_modal" *ngIf="!formcontact">
+          <div  class="reach-form_modal-content">
+            <h3 class="reach-form_title">
+              ¡Felicidades, estás a punto de recibir tu guía personalizada de madurez digital! </h3>
+            <p class="reach-form_description">Solo falta un paso más: finaliza el formulario para recibir al instante consejos y estrategias adaptadas a tus respuestas. </p>
+            
+            <form [formGroup]="form" class="reach-form-group" (ngSubmit)="sendForm(form.valid)">
+              <div class="reach-form-group_item">
+                <label for="name">Nombre Completo:</label>
+                <input type="text" id="name" formControlName="name">
+              </div>
+              <div class="reach-form-group_item">
+              <label for="email">Correo Electrónico:</label>
+              <input type="email" id="email" formControlName="email">
+                </div>
+                <div class="reach-form-group_item">
+              <label for="phone">Número de Teléfono:</label>
+              <input type="tel" id="phone" formControlName="phone">
+            </div>
+            <div class="reach-form-group_item">
+              <label for="company">Empresa:</label>
+              <input type="text" id="company" formControlName="company">
+            </div>
+            <div class="reach-form-group_item">
+              <label for="company">Tipo de industria:</label>
+              <select id="industrySelect" formControlName="industrie">
+                <option *ngFor="let industry of industries" [value]="industry">{{ industry }}</option>
+              </select>
+            </div>
+
+            <div class="reach-navigation">
+              <button mat-button class="reach-navigation_button reach-navigation_send reach-navigation_send{{form.invalid?'-disabled':'-valid'}}"  type="submit" [disabled]="form.invalid">Enviar</button>
+            </div>
+            </form>
+          </div>
+        </div>
+        <div class="reach-result" *ngIf="formcontact">
+          <h3 class="reach-form_title">¡Enhorabuena! </h3>
+          <p class="reach-form_description">Tu formulario ha sido enviado exitosamente. Muy pronto recibirás un correo electrónico con la guía de madurez digital. </p>
+          <p class="reach-form_description">¡Descubre tus próximos pasos para potenciar tus habilidades digitales y alcanzar nuevos niveles de éxito!</p>
+          <div class="reach-navigation">
+            <button class="reach-navigation_button reach-navigation_start" (click)="refreshPage()">Iniciar nuevamente</button>
+          </div>
+        </div>
+      </section>
+      
+      <section class="reach-layout reach-layout_right" style="background-image: url(../assets/reach/q0-bg.jpg)">
+        <div class="reach-end_desctiption">
+          <img src="../assets/reach/logo.png" alt="Computadora">
+        </div>
+      </section>
+    </div>
+  </div>
+  <ng-container *ngFor="let question of questions; let i = index">
+    <div *ngIf="this.currentQuestionIndex != 5 && this.currentQuestionIndex != 0 && this.currentQuestionIndex == i" class='reach-question reach-question-{{i}}'>
+      <section class="reach-layout reach-layout_left">
+        <div class="reach-navigation">
+          <div class="reach-navigation-items">
+            <div class="reach-navigation-items_item" *ngFor="let question of questions; let i_i = index" [ngClass]="{'reach-navigation-items_item-active': i == i_i,'reach-navigation-items_item-visited': i > i_i}">
+              <span>{{i_i + 1}}</span>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="question.type === 'checkbox'; else radioBlock">
+          <h3 class="reach-question_title">{{ question.question }}</h3>
+          <div class="reach-question_answers">
+            <div *ngFor="let answer of question.answers" class="reach-question_answers-item">
+              <mat-checkbox class="reach-question_answers-item-checkbox" (change)="dataMaterial(question.abb, answer.abb, false, $event, answer.value, question.type)"  [(ngModel)]="answers[question.abb][answer.abb].checked">
+                {{ answer.name }}
+                <div class="reach-tooltip">
+                  <img *ngIf="answer.icon" class="reach-tooltip_image"src="../assets/reach/{{answer.icon}}.png" alt="{{ answer.name }}" width="20px">
+                  <div *ngIf="answer.icon" class="reach-tooltip_description">{{answer.description}}</div>
+                </div>
+              </mat-checkbox>
+              <div class="reach-question_answers-options" *ngIf="answer.options && answers[question.abb][answer.abb].checked">
+                <mat-radio-group  class="reach-question_answers-options-items">
+                  <mat-radio-button *ngFor="let option of answer.options" [value]="option.value" (change)="dataMaterial(question.abb, answer.abb, option.abb, $event, option.value, false)">
+                    {{ option.name }}
+                    <div class="reach-tooltip">
+                      <img *ngIf="option.icon" class="reach-tooltip_image"src="../assets/reach/{{option.icon}}.png" alt="{{ option.name }}" width="20px">
+                      <div *ngIf="option.icon" class="reach-tooltip_description">{{option.description}}</div>
+                    </div>
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #radioBlock>
+          <h3 class="reach-question_title">{{ question.question }}</h3>
+          <div class="reach-question_answers">
+            <div class="reach-question_answers-options">
+              <mat-radio-group  class="reach-question_answers-options-items">
+                <mat-radio-button *ngFor="let answer of question.answers" [value]="answer.value" (change)="dataMaterial(question.abb, answer.abb, false, $event, answer.value, question.type)">
+                  {{ answer.name }}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </ng-template>
+        <div class="reach-navigation">
+          <button class="reach-navigation_button reach-navigation_back" *ngIf="i > 1 &&  i < (questions.length - 1)" (click)="previousQuestion()">Anterior</button>
+          <button class="reach-navigation_button reach-navigation_next" [disabled]="answers.q1.a2.checked == true && answers.q1.a2.o1.value == 0 || answers.q1.a3.checked == true && answers.q1.a3.o1.value == 0"  *ngIf="i > 0 && i < (questions.length - 2)"  (click)="nextQuestion()">Siguiente</button>
+          <button class="reach-navigation_button reach-navigation_finish" *ngIf=" i == (questions.length - 2)"  (click)="nextQuestion()">Siguiente</button>
+        </div>
+      </section>
+      <section class="reach-layout reach-layout_right" style="background-image: url(../assets/reach/{{question.images.principal}})">
+        <ng-container *ngIf="question.images.secondary && question.images.secondary.length > 0">
+          <img  *ngFor="let item of question.images.secondary; let i = index" src="../assets/reach/{{item.image}}" class="animate" alt="{{ item.alt }}"/>
+        </ng-container>
+      </section>
+    </div>
+  </ng-container>
+</div>
